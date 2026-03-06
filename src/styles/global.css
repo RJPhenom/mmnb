@@ -1,0 +1,279 @@
+@import "tailwindcss";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Urbanist", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: #fff;
+  color: #111;
+}
+
+/* ── Hero ─────────────────────────────────────────── */
+#hero {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  background: #000;
+}
+
+#hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0.85;
+}
+
+#hero-tagline {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(900px, 88vw);
+  text-align: center;
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.35);
+}
+
+#hero-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 46vh;
+  background: #fff;
+  z-index: 1;
+}
+
+#hero-logo {
+  position: absolute;
+  width: min(860px, 88vw);
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  pointer-events: none;
+  user-select: none;
+  /* yPercent and xPercent set by GSAP */
+}
+
+#nav-links {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  padding-right: 2.5rem;
+  opacity: 0;
+  z-index: 2;
+}
+
+#nav-links a {
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #111;
+  transition: text-decoration 0.2s ease;
+}
+
+#nav-links a:hover {
+  text-decoration: underline;
+}
+
+/* ── Sticky persistent nav (shows after hero leaves) ── */
+#sticky-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2.5rem;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+#sticky-nav img {
+  width: 220px;
+  margin-left: 2px;
+}
+
+#sticky-nav nav {
+  display: flex;
+  gap: 2.5rem;
+}
+
+#sticky-nav nav a {
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #111;
+}
+
+#sticky-nav nav a:hover {
+  text-decoration: underline;
+}
+
+/* ── B-roll section ───────────────────────────────── */
+#broll {
+  position: relative;
+  height: 75vh;
+  overflow: hidden;
+  background: #000;
+}
+
+#broll video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+}
+
+/* ── Work section ─────────────────────────────────── */
+#work {
+  padding: 7rem 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#work h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 4rem;
+}
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2.5rem;
+}
+
+.work-card {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 1.5rem;
+}
+
+.work-card .tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-bottom: 0.75rem;
+}
+
+.work-card h3 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  color: #111;
+}
+
+.work-card p {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #666;
+}
+
+/* ── About section ────────────────────────────────── */
+#about {
+  padding: 7rem 5rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  border-top: 1px solid #e0e0e0;
+  background: #111;
+}
+
+#about h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-bottom: 4rem;
+}
+
+.about-lead {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 400;
+  line-height: 1.35;
+  color: #fff;
+  margin-bottom: 2rem;
+}
+
+.about-sub {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: #aaa;
+}
+
+/* ── Contact section ──────────────────────────────── */
+#contact {
+  padding: 7rem 2.5rem 12rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-top: 1px solid #e0e0e0;
+}
+
+#contact h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 4rem;
+}
+
+.contact-lead {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 400;
+  color: #111;
+  margin-bottom: 1.5rem;
+}
+
+.contact-email {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #111;
+  text-decoration: none;
+  border-bottom: 1px solid #111;
+  padding-bottom: 2px;
+  transition: opacity 0.2s ease;
+}
+
+.contact-email:hover {
+  opacity: 0.5;
+}

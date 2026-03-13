@@ -54,18 +54,19 @@ body {
 }
 
 #hero-panel {
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   top: 50%;
-  height: 46vh;
+  height: 64vh;
   background: #fff;
-  z-index: 1;
+  z-index: 10;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 #hero-logo {
   position: absolute;
-  width: min(860px, 88vw);
+  width: min(640px, 88vw);
   top: 50%;
   left: 50%;
   z-index: 2;
@@ -101,45 +102,54 @@ body {
   text-decoration: underline;
 }
 
-/* ── Sticky persistent nav (shows after hero leaves) ── */
-#sticky-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100px;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 2.5rem;
-  z-index: 200;
+/* ── Scroll arrow ─────────────────────────────────── */
+#scroll-arrow,
+#scroll-work {
+  outline: none;
+}
+
+#scroll-arrow {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  background: rgb(210, 210, 210, 0.5);
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  padding: 0.75rem;
+  color: #111;
+  opacity: 0;
+}
+
+#scroll-arrow svg {
+  width: 36px;
+  height: 36px;
+  display: block;
+}
+
+/* ── Second scroll button (inside hero, post-animation) ── */
+#scroll-work {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  background: rgb(210, 210, 210, 0.5);
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  padding: 0.75rem;
+  color: #111;
   opacity: 0;
   pointer-events: none;
-  border-bottom: 1px solid #f0f0f0;
 }
 
-#sticky-nav img {
-  width: 220px;
-  margin-left: 2px;
-}
-
-#sticky-nav nav {
-  display: flex;
-  gap: 2.5rem;
-}
-
-#sticky-nav nav a {
-  font-size: 0.85rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: #111;
-}
-
-#sticky-nav nav a:hover {
-  text-decoration: underline;
+#scroll-work svg {
+  width: 36px;
+  height: 36px;
+  display: block;
 }
 
 /* ── B-roll section ───────────────────────────────── */

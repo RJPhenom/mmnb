@@ -15,36 +15,32 @@ import '../styles/global.css';
   </head>
   <body>
 
-    <!-- Persistent sticky nav — hidden until hero scrolls away -->
-    <div id="sticky-nav">
-      <a href="#" aria-label="Back to top" style="line-height:0;">
-        <img src="/mmnb_logo.png" alt="Macklem Media & Brand" />
-      </a>
-      <nav>
+    <!-- Hero panel: always fixed, GSAP scrubs it from center to nav bar -->
+    <div id="hero-panel">
+      <img id="hero-logo" src="/mmnb_logo.png" alt="Macklem Media & Brand" />
+      <nav id="nav-links">
         <a href="#work">Work</a>
         <a href="#about">About</a>
         <a href="#contact">Contact</a>
       </nav>
     </div>
 
-    <!-- Hero: b-roll video background with animated white center panel -->
+    <!-- Hero: b-roll video background -->
     <section id="hero">
       <video id="hero-video" autoplay muted loop playsinline>
         <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" type="video/mp4" />
       </video>
-      <div id="hero-panel">
-        <img
-          id="hero-logo"
-          src="/mmnb_logo.png"
-          alt="Macklem Media & Brand"
-        />
-      </div>
       <p id="hero-tagline">Brand and media have never been this simple, or this hard.</p>
-      <div id="nav-links">
-        <a href="#work">Work</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
-      </div>
+      <button id="scroll-arrow" aria-label="Scroll down">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+      <button id="scroll-work" aria-label="Scroll to Work">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
     </section>
 
     <!-- Main: Work, About and Contact -->
@@ -147,14 +143,8 @@ import '../styles/global.css';
           trigger: '#hero',
           start: 'top top',
           end: '+=700',
-          scrub: 1.2,
+          scrub: 5,
           pin: true,
-          onLeave: () => {
-            gsap.set('#sticky-nav', { opacity: 1, pointerEvents: 'auto' });
-          },
-          onEnterBack: () => {
-            gsap.set('#sticky-nav', { opacity: 0, pointerEvents: 'none' });
-          },
         },
       })
       .to('#hero-panel', {
@@ -163,7 +153,6 @@ import '../styles/global.css';
         height: 100,
         ease: 'power2.inOut',
       })
-      // Only animate width and horizontal position — vertical stays at 50% of panel always
       .to('#hero-logo', {
         width: 220,
         left: 42,
@@ -173,14 +162,115 @@ import '../styles/global.css';
       .to(
         '#nav-links',
         { opacity: 1, ease: 'power2.in' },
-        '>-0.5'
+        '>-0.3'
       )
-      // Tagline fades in halfway through the nav-links fade
       .to(
         '#hero-tagline',
         { opacity: 1, ease: 'power2.in' },
-        '<50%'
+        0.1
       );
+
+      // Fade arrow in on load, then pulse; GSAP owns opacity throughout
+      const arrow = document.getElementById('scroll-arrow');
+      let pulseTween: gsap.core.Animation | null = null;
+
+      const startPulse = () => {
+        if (!arrowVisible) return; // guard: don't restart if already fading out
+        const tl = gsap.timeline({ repeat: -1 });
+        tl.fromTo(arrow, { opacity: 1 }, { opacity: 0.25, duration: 1.2, ease: 'sine.inOut' })
+          .fromTo(arrow, { opacity: 0.25 }, { opacity: 1, duration: 1.2, ease: 'sine.inOut' });
+        pulseTween = tl;
+      };
+
+      const fadeOutArrow = () => {
+        if (!arrowVisible) return;
+        arrowVisible = false;
+        pulseTween?.kill();
+        gsap.to(arrow, { opacity: 0, duration: 0.3, overwrite: true, onComplete: () => {
+          if (arrow) arrow.style.pointerEvents = 'none';
+        }});
+      };
+
+      gsap.to(arrow, { opacity: 1, duration: 0.8, delay: 0.5, onComplete: startPulse });
+
+      // ── Second scroll button (scroll to Work) ──────────
+      const workBtn = document.getElementById('scroll-work');
+      let workBtnVisible = false;
+      let workPulseTween: gsap.core.Animation | null = null;
+
+      const startWorkPulse = () => {
+        if (!workBtnVisible) return;
+        const tl = gsap.timeline({ repeat: -1 });
+        tl.fromTo(workBtn, { opacity: 1 }, { opacity: 0.25, duration: 1.2, ease: 'sine.inOut' })
+          .fromTo(workBtn, { opacity: 0.25 }, { opacity: 1, duration: 1.2, ease: 'sine.inOut' });
+        workPulseTween = tl;
+      };
+
+      const showWorkBtn = () => {
+        if (workBtnVisible) return;
+        workBtnVisible = true;
+        if (workBtn) workBtn.style.pointerEvents = 'auto';
+        gsap.to(workBtn, { opacity: 1, duration: 0.4, overwrite: true, onComplete: startWorkPulse });
+      };
+
+      const hideWorkBtn = () => {
+        if (!workBtnVisible) return;
+        workBtnVisible = false;
+        workPulseTween?.kill();
+        gsap.to(workBtn, { opacity: 0, duration: 0.3, overwrite: true, onComplete: () => {
+          if (workBtn) workBtn.style.pointerEvents = 'none';
+        }});
+      };
+
+      let isScrollingToWork = false;
+
+      workBtn?.addEventListener('click', () => {
+        hideWorkBtn();
+        const workEl = document.getElementById('work');
+        if (!workEl) return;
+        const target = workEl.getBoundingClientRect().top + window.scrollY;
+        const start = { y: window.scrollY };
+        document.documentElement.style.scrollBehavior = 'auto';
+        isScrollingToWork = true;
+        gsap.to(start, {
+          y: target,
+          duration: 1.5,
+          ease: 'power2.inOut',
+          onUpdate() { window.scrollTo(0, start.y); },
+          onComplete() {
+            document.documentElement.style.scrollBehavior = '';
+            isScrollingToWork = false;
+          },
+        });
+      });
+
+      // ── Shared scroll listener ───────────────────────
+      let arrowVisible = true;
+      window.addEventListener('scroll', () => {
+        const sy = window.scrollY;
+
+        // First arrow: visible only at top
+        if (arrowVisible && sy > 10) {
+          fadeOutArrow();
+        } else if (!arrowVisible && sy <= 10) {
+          arrowVisible = true;
+          if (arrow) arrow.style.pointerEvents = 'auto';
+          gsap.to(arrow, { opacity: 1, duration: 0.4, onComplete: startPulse });
+        }
+
+        // Second button: show when animation done, hide only when well back into the animation
+        if (!workBtnVisible && sy >= 680 && !isScrollingToWork) {
+          showWorkBtn();
+        } else if (workBtnVisible && sy < 450) {
+          hideWorkBtn();
+        }
+      }, { passive: true });
+
+      // Click first arrow: fade out immediately then jump scroll
+      arrow?.addEventListener('click', () => {
+        fadeOutArrow();
+        window.scrollTo(0, 700);
+      });
     </script>
 
   </body>

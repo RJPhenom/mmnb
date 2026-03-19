@@ -45,7 +45,7 @@ body {
   width: min(900px, 88vw);
   text-align: center;
   font-size: clamp(2.5rem, 7vw, 6rem);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.1;
   color: #fff;
   opacity: 0;
@@ -66,7 +66,7 @@ body {
 
 #hero-logo {
   position: absolute;
-  width: min(640px, 88vw);
+  width: min(480px, 88vw);
   top: 50%;
   left: 50%;
   z-index: 2;
@@ -187,13 +187,48 @@ body {
 
 .work-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2.5rem;
 }
 
 .work-card {
   border-top: 1px solid #e0e0e0;
   padding-top: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: flex-start;
+  transition: opacity 0.2s ease;
+}
+
+.work-card:hover {
+  opacity: 0.65;
+}
+
+.work-card-thumb {
+  flex: 0 0 80px;
+  height: 80px;
+  background: #f4f4f4;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.work-card-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.work-card-thumb--placeholder {
+  background: #f0f0f0;
+}
+
+.work-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .work-card .tag {
@@ -202,13 +237,11 @@ body {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #aaa;
-  margin-bottom: 0.75rem;
 }
 
 .work-card h3 {
   font-size: 1.4rem;
   font-weight: 500;
-  margin-bottom: 0.75rem;
   color: #111;
 }
 
@@ -224,7 +257,7 @@ body {
   max-width: 1280px;
   margin: 0 auto;
   border-top: 1px solid #e0e0e0;
-  background: #111;
+  background: #000;
 }
 
 #about h2 {
@@ -286,4 +319,223 @@ body {
 
 .contact-email:hover {
   opacity: 0.5;
+}
+
+/* ── All case studies link ────────────────────────── */
+.all-case-studies-link {
+  display: table;
+  margin: 3rem auto 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #555;
+  text-decoration: none;
+  border-bottom: 1px solid #555;
+  transition: opacity 0.2s ease;
+}
+
+.all-case-studies-link:hover {
+  opacity: 0.5;
+}
+
+/* ── Inner page nav ───────────────────────────────── */
+.inner-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 72px;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2.5rem;
+}
+
+.inner-nav-logo img {
+  height: 28px;
+  display: block;
+}
+
+.inner-nav-links {
+  display: flex;
+  gap: 2.5rem;
+}
+
+.inner-nav-links a {
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #111;
+  transition: opacity 0.2s ease;
+}
+
+.inner-nav-links a:hover {
+  opacity: 0.5;
+}
+
+.inner-main {
+  min-height: calc(100vh - 72px);
+}
+
+/* ── Case studies list page ───────────────────────── */
+.cs-list-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 5rem 2.5rem 8rem;
+}
+
+.cs-list-heading {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 4rem;
+}
+
+.cs-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.cs-list-card {
+  border-top: 1px solid #e0e0e0;
+  padding: 2rem 0;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: row;
+  gap: 2.5rem;
+  align-items: center;
+  transition: opacity 0.2s ease;
+}
+
+.cs-list-card:last-child {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.cs-list-card:hover {
+  opacity: 0.65;
+}
+
+.cs-list-thumb {
+  flex: 0 0 100px;
+  height: 100px;
+  background: #f4f4f4;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.cs-list-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cs-list-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.cs-list-body h2 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: #111;
+}
+
+/* ── Case study article page ──────────────────────── */
+.cs-article {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 5rem 2.5rem 8rem;
+}
+
+.cs-header {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+  margin-bottom: 4rem;
+  padding-bottom: 4rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.cs-header-logo {
+  flex: 0 0 120px;
+  height: 120px;
+  background: #f4f4f4;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.cs-header-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cs-header-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cs-header-meta h1 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 600;
+  color: #111;
+  line-height: 1.15;
+}
+
+.cs-body {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #444;
+}
+
+.cs-body p {
+  margin-bottom: 1.5rem;
+}
+
+.cs-body p:last-child {
+  margin-bottom: 0;
+}
+
+.cs-list-byline {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #666;
+}
+
+.cs-header-byline {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+.cs-back-link {
+  display: inline-block;
+  margin-top: 3rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #555;
+  text-decoration: none;
+  border-bottom: 1px solid #555;
+  transition: opacity 0.2s ease;
+}
+
+.cs-back-link:hover {
+  opacity: 0.5;
+}
+
+.cs-back-link--center {
+  display: block;
+  text-align: center;
+  margin: 3rem auto 0;
+  width: fit-content;
 }

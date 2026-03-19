@@ -1,0 +1,29 @@
+---
+import InnerLayout from '../../layouts/InnerLayout.astro';
+import { getCollection } from 'astro:content';
+import { getLogoSrc } from '../../utils/logos';
+
+const studies = (await getCollection('case-studies'))
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+---
+
+<InnerLayout title="Case Studies">
+  <section class="cs-list-section">
+    <h1 class="cs-list-heading">Work</h1>
+    <div class="cs-list">
+      {studies.map((study) => (
+        <a href={`/case-studies/${study.id.replace(/\.mdx?$/, '')}`} class="cs-list-card">
+          <div class="cs-list-thumb">
+            <img src={getLogoSrc(study.data.logo)} alt={study.data.title} />
+          </div>
+          <div class="cs-list-body">
+            <p class="tag">{study.data.tags.join(' · ')}</p>
+            <h2>{study.data.title}</h2>
+            <p class="cs-list-byline" set:html={study.data.byline} />
+          </div>
+        </a>
+      ))}
+    </div>
+    <a href="/" class="cs-back-link cs-back-link--center">&larr; Back to Home</a>
+  </section>
+</InnerLayout>

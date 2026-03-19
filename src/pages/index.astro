@@ -1,11 +1,18 @@
 ---
 import '../styles/global.css';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { getLogoSrc } from '../utils/logos';
+
+const studies = (await getCollection('case-studies'))
+  .sort((a: CollectionEntry<'case-studies'>, b: CollectionEntry<'case-studies'>) =>
+    (a.data.order ?? 99) - (b.data.order ?? 99)
+  );
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/png" href="/mmnb_logo.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,7 +24,7 @@ import '../styles/global.css';
 
     <!-- Hero panel: always fixed, GSAP scrubs it from center to nav bar -->
     <div id="hero-panel">
-      <img id="hero-logo" src="/mmnb_logo.png" alt="Macklem Media & Brand" />
+      <img id="hero-logo" src="/mmnb_wordmark_black.svg" alt="Macklem Media & Brand" />
       <nav id="nav-links">
         <a href="#work">Work</a>
         <a href="#about">About</a>
@@ -30,7 +37,7 @@ import '../styles/global.css';
       <video id="hero-video" autoplay muted loop playsinline>
         <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" type="video/mp4" />
       </video>
-      <p id="hero-tagline">Brand and media have never been this simple, or this hard.</p>
+      <p id="hero-tagline"><span style="font-weight:900">Brand</span> and <span style="font-weight:900">media</span> have never been this <span style="font-weight:900;font-size:1.2em">easy</span>.</p>
       <button id="scroll-arrow" aria-label="Scroll down">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="6 9 12 15 18 9"/>
@@ -50,45 +57,48 @@ import '../styles/global.css';
       <section id="work">
         <h2>Work</h2>
         <div class="work-grid">
-          <div class="work-card">
-            <p class="tag">Brand Strategy</p>
-            <h3>Project Title One</h3>
-            <p>Placeholder description for a brand strategy engagement. Full case study coming soon.</p>
-          </div>
-          <div class="work-card">
-            <p class="tag">Video Production</p>
-            <h3>Project Title Two</h3>
-            <p>Placeholder description for a video production project. Full case study coming soon.</p>
-          </div>
-          <div class="work-card">
-            <p class="tag">Campaign</p>
-            <h3>Project Title Three</h3>
-            <p>Placeholder description for a campaign execution. Full case study coming soon.</p>
-          </div>
-          <div class="work-card">
-            <p class="tag">Identity</p>
-            <h3>Project Title Four</h3>
-            <p>Placeholder description for a brand identity project. Full case study coming soon.</p>
-          </div>
-          <div class="work-card">
-            <p class="tag">Social Media</p>
-            <h3>Project Title Five</h3>
-            <p>Placeholder description for a social media campaign. Full case study coming soon.</p>
-          </div>
-          <div class="work-card">
-            <p class="tag">Consulting</p>
-            <h3>Project Title Six</h3>
-            <p>Placeholder description for a brand consulting engagement. Full case study coming soon.</p>
-          </div>
+
+          {studies.map((study: CollectionEntry<'case-studies'>) => (
+            <a href={`/case-studies/${study.id.replace(/\.mdx?$/, '')}`} class="work-card">
+              <div class="work-card-thumb">
+                <img src={getLogoSrc(study.data.logo)} alt={study.data.title} />
+              </div>
+              <div class="work-card-body">
+                <p class="tag">{study.data.tags.join(' · ')}</p>
+                <h3>{study.data.title}</h3>
+                <p set:html={study.data.byline} />
+              </div>
+            </a>
+          ))}
+
+          <a href="/case-studies/project-five" class="work-card">
+            <div class="work-card-thumb work-card-thumb--placeholder"></div>
+            <div class="work-card-body">
+              <p class="tag">Social Media</p>
+              <h3>Project Title Five</h3>
+              <p>Placeholder description for a social media campaign. Full case study coming soon.</p>
+            </div>
+          </a>
+
+          <a href="/case-studies/project-six" class="work-card">
+            <div class="work-card-thumb work-card-thumb--placeholder"></div>
+            <div class="work-card-body">
+              <p class="tag">Consulting</p>
+              <h3>Project Title Six</h3>
+              <p>Placeholder description for a brand consulting engagement. Full case study coming soon.</p>
+            </div>
+          </a>
+
         </div>
+        <a href="/case-studies" class="all-case-studies-link">All case studies &rarr;</a>
       </section>
 
       <!-- About -->
       <section id="about">
         <h2>About</h2>
         <div class="about-body">
-          <p class="about-lead">Macklem Media &amp; Brand is a full-service agency specializing in brand strategy, video production, and campaign execution.</p>
-          <p class="about-sub">We partner with clients to create compelling narratives and impactful visual content that resonates with audiences and drives results.</p>
+          <p class="about-lead">Macklem Media &amp; Brand is a full-service agency that is democratizing brand excellence with <strong>AI</strong>.</p>
+          <p class="about-sub">We partner with clients to create brand identities, compelling narratives and impactful content affordably at scale. We combine the latest in AI tools with real experience at Canada's top media outlets to deliver the highest results.</p>
         </div>
       </section>
 
@@ -133,6 +143,16 @@ import '../styles/global.css';
 
       gsap.registerPlugin(ScrollTrigger);
 
+      // Capture and defer hash navigation from external pages.
+      // The browser fires its native hash scroll before GSAP's ScrollTrigger
+      // adds its pin spacer, causing an incorrect scroll position. We prevent
+      // the native scroll and re-apply it after GSAP has fully initialized.
+      const pendingHash = window.location.hash;
+      if (pendingHash) {
+        window.scrollTo(0, 0);
+        history.replaceState(null, '', window.location.pathname);
+      }
+
       // Logo lives inside the panel — only set its horizontal centering
       gsap.set('#hero-panel', { yPercent: -50 });
       gsap.set('#hero-logo', { xPercent: -50, yPercent: -50 });
@@ -154,7 +174,7 @@ import '../styles/global.css';
         ease: 'power2.inOut',
       })
       .to('#hero-logo', {
-        width: 220,
+        width: 200,
         left: 42,
         xPercent: 0,
         ease: 'power2.inOut',
@@ -255,7 +275,7 @@ import '../styles/global.css';
         } else if (!arrowVisible && sy <= 10) {
           arrowVisible = true;
           if (arrow) arrow.style.pointerEvents = 'auto';
-          gsap.to(arrow, { opacity: 1, duration: 0.4, onComplete: startPulse });
+          gsap.to(arrow, { opacity: 1, duration: 0.4, overwrite: true, onComplete: startPulse });
         }
 
         // Second button: show when animation done, hide only when well back into the animation
@@ -271,6 +291,15 @@ import '../styles/global.css';
         fadeOutArrow();
         window.scrollTo(0, 700);
       });
+
+      // Scroll to deferred hash now that GSAP pin spacers are in place
+      if (pendingHash) {
+        const target = document.querySelector(pendingHash);
+        if (target) {
+          const y = target.getBoundingClientRect().top + window.scrollY - 100;
+          window.scrollTo(0, Math.max(0, y));
+        }
+      }
     </script>
 
   </body>

@@ -1,0 +1,39 @@
+---
+import InnerLayout from '../../layouts/InnerLayout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { getLogoSrc } from '../../utils/logos';
+
+export async function getStaticPaths() {
+  const studies = await getCollection('case-studies');
+  return studies.map((study) => ({
+    params: { slug: study.id.replace(/\.mdx?$/, '') },
+    props: { study },
+  }));
+}
+
+const { study } = Astro.props as { study: CollectionEntry<'case-studies'> };
+const { Content } = await study.render();
+---
+
+<InnerLayout title={study.data.title}>
+  <article class="cs-article">
+
+    <header class="cs-header">
+      <div class="cs-header-logo">
+        <img src={getLogoSrc(study.data.logo)} alt={study.data.title} />
+      </div>
+      <div class="cs-header-meta">
+        <p class="tag">{study.data.tags.join(' · ')}</p>
+        <h1>{study.data.title}</h1>
+        <p class="cs-header-byline" set:html={study.data.byline} />
+      </div>
+    </header>
+
+    <div class="cs-body">
+      <Content />
+    </div>
+
+    <a href="/" class="cs-back-link">&larr; Back to Home</a>
+
+  </article>
+</InnerLayout>

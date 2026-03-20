@@ -13,6 +13,7 @@ export async function getStaticPaths() {
 
 const { study } = Astro.props as { study: CollectionEntry<'case-studies'> };
 const { Content } = await study.render();
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <InnerLayout title={study.data.title}>
@@ -33,7 +34,7 @@ const { Content } = await study.render();
       <Content />
     </div>
 
-    <a href={import.meta.env.BASE_URL} class="cs-back-link">&larr; Back to Home</a>
+    <a href={`${base}/`} class="cs-back-link">&larr; Back to Home</a>
 
   </article>
 </InnerLayout>
